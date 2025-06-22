@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="6.0" xmlns="https://jakarta.ee/xml/ns/jakartaee" 
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd">
+    
+    <session-config>
+        <session-timeout>
+            30
+        </session-timeout>
+    </session-config>
+    
+    <!-- Welcome File -->
+    <welcome-file-list>
+        <welcome-file>index.html</welcome-file>
+    </welcome-file-list>
+    
+    <!-- Login Servlet -->
+    <servlet>
+        <servlet-name>Login</servlet-name>
+        <servlet-class>Controller.Login</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Login</servlet-name>
+        <url-pattern>/login</url-pattern>
+    </servlet-mapping>
+    
+    <!-- Select Context Servlet -->
+    <servlet>
+        <servlet-name>SelectContext</servlet-name>
+        <servlet-class>Controller.SelectContextServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SelectContext</servlet-name>
+        <url-pattern>/selectContext</url-pattern>
+    </servlet-mapping>
+    
+    <!-- Employee Home Servlet -->
+    <servlet>
+        <servlet-name>EmployeeHome</servlet-name>
+        <servlet-class>Controller.EmployeeHomeServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>EmployeeHome</servlet-name>
+        <url-pattern>/employee/home</url-pattern>
+    </servlet-mapping>
+    
+    <!-- Manager Home Servlet -->
+    <servlet>
+        <servlet-name>ManagerHome</servlet-name>
+        <servlet-class>Controller.ManagerHomeServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ManagerHome</servlet-name>
+        <url-pattern>/manager/home</url-pattern>
+    </servlet-mapping>
+    
+    <!-- Admin Home Servlet -->
+    <servlet>
+        <servlet-name>AdminHome</servlet-name>
+        <servlet-class>Controller.AdminHomeServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AdminHome</servlet-name>
+        <url-pattern>/admin/home</url-pattern>
+    </servlet-mapping>
+    
+    <!-- Request Servlet -->
+    <servlet>
+        <servlet-name>RequestServlet</servlet-name>
+        <servlet-class>Controller.RequestServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>RequestServlet</servlet-name>
+        <url-pattern>/requests/*</url-pattern>
+    </servlet-mapping>
+    
+    <!-- Approval Servlet -->
+    <servlet>
+        <servlet-name>ApprovalServlet</servlet-name>
+        <servlet-class>Controller.ApprovalServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ApprovalServlet</servlet-name>
+        <url-pattern>/requests/approve</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ApprovalServlet</servlet-name>
+        <url-pattern>/requests/reject</url-pattern>
+    </servlet-mapping>
+    
+    <!-- Agenda Servlet -->
+    <servlet>
+        <servlet-name>AgendaServlet</servlet-name>
+        <servlet-class>Controller.AgendaServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AgendaServlet</servlet-name>
+        <url-pattern>/agenda</url-pattern>
+    </servlet-mapping>
+    
+    <!-- Logout Servlet -->
+    <servlet>
+        <servlet-name>Logout</servlet-name>
+        <servlet-class>Controller.Logout</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Logout</servlet-name>
+        <url-pattern>/logout</url-pattern>
+    </servlet-mapping>
+    
+    <!-- Error Page -->
+    <error-page>
+        <error-code>404</error-code>
+        <location>/JSP/error.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>500</error-code>
+        <location>/JSP/error.jsp</location>
+    </error-page>
+    
+    <!-- Security Constraints (Optional, for advanced setup) -->
+    <!--
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>Protected Resources</web-resource-name>
+            <url-pattern>/employee/*</url-pattern>
+            <url-pattern>/manager/*</url-pattern>
+            <url-pattern>/requests/*</url-pattern>
+            <url-pattern>/agenda</url-pattern>
+        </web-resource-collection>
+        <auth-constraint />
+    </security-constraint>
+    -->
+</web-app>

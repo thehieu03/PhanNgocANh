@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/D:/NetBeansProjects/PhanNgocAnh/src/java/Controller/RequestServlet.java</file>
+            <file>file:/D:/NetBeansProjects/PhanNgocAnh/web/JSP/Home.jsp</file>
+            <file>file:/D:/NetBeansProjects/PhanNgocAnh/web/JSP/listRequests.jsp</file>
+            <file>file:/D:/NetBeansProjects/PhanNgocAnh/src/java/Models/User.java</file>
+            <file>file:/D:/NetBeansProjects/PhanNgocAnh/src/java/Controller/EmployeeHomeServlet.java</file>
+            <file>file:/D:/NetBeansProjects/PhanNgocAnh/web/JSP/selectContext.jsp</file>
+            <file>file:/D:/NetBeansProjects/PhanNgocAnh/src/java/Controller/AgendaServlet.java</file>
+            <file>file:/D:/NetBeansProjects/PhanNgocAnh/src/java/DAO/UserDAO.java</file>
+            <file>file:/D:/NetBeansProjects/PhanNgocAnh/src/java/Models/Role.java</file>
+            <file>file:/D:/NetBeansProjects/PhanNgocAnh/src/java/Models/UserRole.java</file>
+            <file>file:/D:/NetBeansProjects/PhanNgocAnh/src/java/DAO/RequestStatusHistoryDAO.java</file>
+            <file>file:/D:/NetBeansProjects/PhanNgocAnh/src/java/Controller/Logout.java</file>
+            <file>file:/D:/NetBeansProjects/PhanNgocAnh/src/java/Controller/SelectContextServlet.java</file>
+            <file>file:/D:/NetBeansProjects/PhanNgocAnh/web/JSP/createRequest.jsp</file>
+            <file>file:/D:/NetBeansProjects/PhanNgocAnh/web/JSP/Login.jsp</file>
+            <file>file:/D:/NetBeansProjects/PhanNgocAnh/src/java/Controller/ApprovalServlet.java</file>
+            <file>file:/D:/NetBeansProjects/PhanNgocAnh/src/java/DAO/UserRoleDAO.java</file>
+            <file>file:/D:/NetBeansProjects/PhanNgocAnh/src/java/Models/RequestStatus.java</file>
+            <file>file:/D:/NetBeansProjects/PhanNgocAnh/src/java/DAO/RequestStatusDAO.java</file>
+            <file>file:/D:/NetBeansProjects/PhanNgocAnh/src/java/Controller/Login.java</file>
+            <file>file:/D:/NetBeansProjects/PhanNgocAnh/src/java/DAO/DbContext.java</file>
+            <file>file:/D:/NetBeansProjects/PhanNgocAnh/src/java/Models/Feature.java</file>
+            <file>file:/D:/NetBeansProjects/PhanNgocAnh/src/java/DAO/RoleFeatureDAO.java</file>
+            <file>file:/D:/NetBeansProjects/PhanNgocAnh/src/java/Models/Request.java</file>
+            <file>file:/D:/NetBeansProjects/PhanNgocAnh/web/JSP/error.jsp</file>
+            <file>file:/D:/NetBeansProjects/PhanNgocAnh/src/java/DAO/RoleDAO.java</file>
+            <file>file:/D:/NetBeansProjects/PhanNgocAnh/src/java/Models/Department.java</file>
+            <file>file:/D:/NetBeansProjects/PhanNgocAnh/src/java/Controller/ManagerHomeServlet.java</file>
+            <file>file:/D:/NetBeansProjects/PhanNgocAnh/src/java/Controller/Home.java</file>
+            <file>file:/D:/NetBeansProjects/PhanNgocAnh/web/JSP/adminHome.jsp</file>
+            <file>file:/D:/NetBeansProjects/PhanNgocAnh/src/java/DAO/DepartmentDAO.java</file>
+            <file>file:/D:/NetBeansProjects/PhanNgocAnh/src/java/DAO/RequestDAO.java</file>
+            <file>file:/D:/NetBeansProjects/PhanNgocAnh/web/WEB-INF/web.xml</file>
+            <file>file:/D:/NetBeansProjects/PhanNgocAnh/web/JSP/employeeHome.jsp</file>
+            <file>file:/D:/NetBeansProjects/PhanNgocAnh/web/index.html</file>
+            <file>file:/D:/NetBeansProjects/PhanNgocAnh/web/JSP/managerHome.jsp</file>
+            <file>file:/D:/NetBeansProjects/PhanNgocAnh/src/java/Models/RequestStatusHistory.java</file>
+            <file>file:/D:/NetBeansProjects/PhanNgocAnh/src/java/Models/RoleFeature.java</file>
+            <file>file:/D:/NetBeansProjects/PhanNgocAnh/src/java/DAO/FeatureDAO.java</file>
+        </group>
+    </open-files>
+</project-private>
