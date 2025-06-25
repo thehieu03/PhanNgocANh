@@ -171,6 +171,13 @@ public class UserDAO extends DbContext {
     }
     
     /**
+     * Find users by department ID (alias for findByDepartmentId)
+     */
+    public List<User> findByDepartment(int departmentId) {
+        return findByDepartmentId(departmentId);
+    }
+    
+    /**
      * Find user by username and password (for login) - deprecated, use authenticate instead
      */
     public User getUserByUsernameAndPassword(String username, String password) {
@@ -290,5 +297,26 @@ public class UserDAO extends DbContext {
         }
         
         return user;
+    }
+    
+    public List<User> findAllWithDepartmentAndManager() {
+        List<User> users = new ArrayList<>();
+        String sql = "SELECT u.*, d.name AS department_name, m.full_name AS manager_name " +
+                "FROM Users u " +
+                "LEFT JOIN Departments d ON u.department_id = d.department_id " +
+                "LEFT JOIN Users m ON u.manager_id = m.user_id " +
+                "ORDER BY u.username";
+        try (PreparedStatement ps = connection.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                User user = mapResultSetToUser(rs);
+                user.setDepartmentName(rs.getString("department_name"));
+                user.setManagerName(rs.getString("manager_name"));
+                users.add(user);
+            }
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Lỗi khi lấy danh sách users kèm phòng ban và manager", e);
+        }
+        return users;
     }
 }

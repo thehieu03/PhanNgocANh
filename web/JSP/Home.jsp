@@ -233,7 +233,7 @@
                                 
                                 <hr class="my-3" style="border-color: rgba(255, 255, 255, 0.2);">
                                 
-                                <a class="nav-link" href="Logout">
+                                <a class="nav-link" href="${pageContext.request.contextPath}/logout">
                                     <i class="fas fa-sign-out-alt me-2"></i>Đăng xuất
                                 </a>
                             </nav>

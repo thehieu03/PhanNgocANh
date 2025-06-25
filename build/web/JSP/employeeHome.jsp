@@ -223,7 +223,7 @@
             <h1>Hệ thống Quản lý Nghỉ phép</h1>
             <div class="user-info">
                 <span class="user-name">Xin chào, ${sessionScope.fullName}</span>
-                <a href="logout" class="logout-btn">Đăng xuất</a>
+                <a href="${pageContext.request.contextPath}/logout" class="logout-btn">Đăng xuất</a>
             </div>
         </div>
     </div>

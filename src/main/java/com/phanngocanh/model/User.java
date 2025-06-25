@@ -2,6 +2,10 @@ package com.phanngocanh.model;
 
 import java.util.List;
 
+import javax.management.relation.Role;
+
+import Models.Department;
+
 /**
  * Model class for User entity
  */
@@ -64,7 +68,7 @@ public class User {
     // Utility methods
     public boolean hasRole(String roleName) {
         if (roles == null) return false;
-        return roles.stream().anyMatch(role -> role.getName().equals(roleName));
+        return roles.stream().anyMatch(role -> role.getRoleName().equals(roleName));
     }
     
     public boolean isManager() {

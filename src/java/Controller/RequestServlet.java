@@ -77,11 +77,11 @@ public class RequestServlet extends HttpServlet {
     
     private void createRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = request.getSession();
+        HttpSession session = request.getSession(false);
         User user = (User) session.getAttribute("user");
         
         if (user == null) {
-            response.sendRedirect("Login");
+            response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
         
@@ -147,11 +147,11 @@ public class RequestServlet extends HttpServlet {
     
     private void listRequests(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = request.getSession();
+        HttpSession session = request.getSession(false);
         User user = (User) session.getAttribute("user");
         
         if (user == null) {
-            response.sendRedirect("Login");
+            response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
         
@@ -183,11 +183,11 @@ public class RequestServlet extends HttpServlet {
     
     private void viewRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = request.getSession();
+        HttpSession session = request.getSession(false);
         User user = (User) session.getAttribute("user");
         
         if (user == null) {
-            response.sendRedirect("Login");
+            response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
         

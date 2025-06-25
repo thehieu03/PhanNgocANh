@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.sql.Connection;
 
 /**
  * DAO class for Request entity
@@ -282,12 +283,50 @@ public class RequestDAO extends DbContext {
         request.setRequestId(rs.getInt("request_id"));
         request.setUserId(rs.getInt("user_id"));
         request.setTitle(rs.getString("title"));
-        request.setStartDate(rs.getDate("start_date").toLocalDate());
-        request.setEndDate(rs.getDate("end_date").toLocalDate());
+        java.sql.Date startDate = rs.getDate("start_date");
+        if (startDate != null) request.setStartDate(startDate.toLocalDate());
+        java.sql.Date endDate = rs.getDate("end_date");
+        if (endDate != null) request.setEndDate(endDate.toLocalDate());
         request.setReason(rs.getString("reason"));
         request.setStatusId(rs.getInt("status_id"));
-        request.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
-        request.setUpdatedAt(rs.getTimestamp("updated_at").toLocalDateTime());
+        java.sql.Timestamp createdAt = rs.getTimestamp("created_at");
+        if (createdAt != null) request.setCreatedAt(createdAt.toLocalDateTime());
+        java.sql.Timestamp updatedAt = rs.getTimestamp("updated_at");
+        if (updatedAt != null) request.setUpdatedAt(updatedAt.toLocalDateTime());
         return request;
+    }
+
+    public List<Request> findByDepartment(int deptId) {
+        List<Request> list = new ArrayList<>();
+        String sql = "SELECT * FROM Request WHERE departmentId = ?";
+        DbContext db = new DbContext(){};
+        try (Connection conn = db.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, deptId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Request req = new Request();
+                    req.setRequestId(rs.getInt("id"));
+                    req.setUserId(rs.getInt("userId"));
+                    req.setTitle(rs.getString("title"));
+                    java.sql.Date startDate = rs.getDate("startDate");
+                    if (startDate != null) req.setStartDate(startDate.toLocalDate());
+                    java.sql.Date endDate = rs.getDate("endDate");
+                    if (endDate != null) req.setEndDate(endDate.toLocalDate());
+                    req.setReason(rs.getString("reason"));
+                    req.setStatusId(rs.getInt("statusId"));
+                    java.sql.Timestamp createdAt = rs.getTimestamp("createdAt");
+                    if (createdAt != null) req.setCreatedAt(createdAt.toLocalDateTime());
+                    java.sql.Timestamp updatedAt = rs.getTimestamp("updatedAt");
+                    if (updatedAt != null) req.setUpdatedAt(updatedAt.toLocalDateTime());
+                    list.add(req);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            db.close();
+        }
+        return list;
     }
 }

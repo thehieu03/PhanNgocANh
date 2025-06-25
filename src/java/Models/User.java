@@ -16,6 +16,8 @@ public class User {
     private String email;
     private int departmentId;
     private Integer managerId;
+    private String departmentName;
+    private String managerName;
 
     public User() {
     }
@@ -85,5 +87,20 @@ public class User {
     public void setManagerId(Integer managerId) {
         this.managerId = managerId;
     }
-    
+
+    public String getDepartmentName() {
+        return departmentName;
+    }
+
+    public void setDepartmentName(String departmentName) {
+        this.departmentName = departmentName;
+    }
+
+    public String getManagerName() {
+        return managerName;
+    }
+
+    public void setManagerName(String managerName) {
+        this.managerName = managerName;
+    }
 }

@@ -194,12 +194,11 @@
         </form>
         
         <div class="logout-link">
-            <a href="logout">Đăng xuất</a>
+            <a href="${pageContext.request.contextPath}/logout">Đăng xuất</a>
         </div>
     </div>
     
     <script>
-        // Enable/disable continue button based on selection
         const radioButtons = document.querySelectorAll('input[name="selectedContext"]');
         const continueBtn = document.getElementById('continueBtn');
         

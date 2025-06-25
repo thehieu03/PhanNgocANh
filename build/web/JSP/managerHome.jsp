@@ -294,7 +294,7 @@
             <h1>Hệ thống Quản lý Nghỉ phép</h1>
             <div class="user-info">
                 <span class="user-name">Xin chào, ${sessionScope.fullName}</span>
-                <a href="logout" class="logout-btn">Đăng xuất</a>
+                <a href="${pageContext.request.contextPath}/logout" class="logout-btn">Đăng xuất</a>
             </div>
         </div>
     </div>
@@ -310,15 +310,15 @@
         </div>
         
         <div class="menu-grid">
-            <a href="requests/list?deptId=${sessionScope.selectedDept}" class="menu-card">
+            <a href="${pageContext.request.contextPath}/subordinate-requests" class="menu-card">
                 <div class="menu-icon">📋</div>
                 <h3>Xem/duyệt đơn cấp dưới</h3>
-                <p>Xem danh sách đơn nghỉ phép của nhân viên trong phòng ban và thực hiện duyệt/từ chối</p>
+                <p>Xem danh sách đơn nghỉ phép của nhân viên cấp dưới và thực hiện duyệt/từ chối</p>
             </a>
             
-            <a href="agenda?deptId=${sessionScope.selectedDept}" class="menu-card">
+            <a href="${pageContext.request.contextPath}/manager/agenda?deptId=${sessionScope.selectedDept}" class="menu-card">
                 <div class="menu-icon">📅</div>
-                <h3>Xem agenda phòng ban</h3>
+                <h3>Xem lịch nghỉ phép phòng ban</h3>
                 <p>Xem lịch nghỉ phép của phòng ban theo tháng để quản lý nhân sự hiệu quả</p>
             </a>
         </div>

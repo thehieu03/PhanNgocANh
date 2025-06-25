@@ -90,12 +90,12 @@
     
     <!-- Agenda Servlet -->
     <servlet>
-        <servlet-name>AgendaServlet</servlet-name>
+        <servlet-name>Agenda</servlet-name>
         <servlet-class>Controller.AgendaServlet</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>AgendaServlet</servlet-name>
-        <url-pattern>/agenda</url-pattern>
+        <servlet-name>Agenda</servlet-name>
+        <url-pattern>/manager/agenda</url-pattern>
     </servlet-mapping>
     
     <!-- Logout Servlet -->
@@ -106,6 +106,50 @@
     <servlet-mapping>
         <servlet-name>Logout</servlet-name>
         <url-pattern>/logout</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Logout</servlet-name>
+        <url-pattern>/*/logout</url-pattern>
+    </servlet-mapping>
+    
+    <!-- Department Servlet -->
+    <servlet>
+        <servlet-name>Department</servlet-name>
+        <servlet-class>Controller.DepartmentServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Department</servlet-name>
+        <url-pattern>/departments</url-pattern>
+    </servlet-mapping>
+    
+    <!-- Subordinate Request Servlet -->
+    <servlet>
+        <servlet-name>SubordinateRequest</servlet-name>
+        <servlet-class>Controller.SubordinateRequestServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SubordinateRequest</servlet-name>
+        <url-pattern>/subordinate-requests</url-pattern>
+    </servlet-mapping>
+    
+    <!-- User Management Servlet -->
+    <servlet>
+        <servlet-name>UserManagement</servlet-name>
+        <servlet-class>Controller.UserManagementServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UserManagement</servlet-name>
+        <url-pattern>/users</url-pattern>
+    </servlet-mapping>
+    
+    <!-- Report Servlet -->
+    <servlet>
+        <servlet-name>Report</servlet-name>
+        <servlet-class>Controller.ReportServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Report</servlet-name>
+        <url-pattern>/reports</url-pattern>
     </servlet-mapping>
     
     <!-- Error Page -->

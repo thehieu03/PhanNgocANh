@@ -94,9 +94,6 @@ public class Login extends HttpServlet {
                 // Đăng nhập thành công
                 HttpSession session = request.getSession();
                 session.setAttribute("user", user);
-                session.setAttribute("userId", user.getUserId());
-                session.setAttribute("username", user.getUsername());
-                session.setAttribute("fullName", user.getFullName());
                 
                 // Lấy danh sách role contexts
                 List<RoleContext> roleContexts = userDAO.getUserRoleContexts(user.getUserId());

@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import Models.User;
 
 /**
  *
@@ -43,16 +44,22 @@ public class Logout extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        // Thêm header bảo mật để ngăn cache
+        response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+        response.setHeader("Pragma", "no-cache");
+        response.setHeader("Expires", "0");
+        
         // Lấy session hiện tại
         HttpSession session = request.getSession(false);
         
         if (session != null) {
-            // Xóa tất cả attributes trong session
+            User user = (User) session.getAttribute("user");
+            // Nếu cần, lấy tên từ user.getFullName() hoặc user.getUsername()
             session.invalidate();
         }
         
         // Chuyển hướng về trang login
-        response.sendRedirect("Login");
+        response.sendRedirect(request.getContextPath() + "/login");
     }
 
     /**
@@ -66,7 +73,7 @@ public class Logout extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        doGet(request, response);
     }
 
     /**

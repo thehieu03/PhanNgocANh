@@ -21,6 +21,7 @@ public class Request {
     private int statusId;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private User user;
 
     public Request() {
     }
@@ -109,4 +110,11 @@ public class Request {
         this.updatedAt = updatedAt;
     }
     
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 }

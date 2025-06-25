@@ -1,5 +1,6 @@
 package Controller;
 
+import Models.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,9 +20,11 @@ public class AdminHomeServlet extends HttpServlet {
         
         // Basic authentication check
         if (session == null || session.getAttribute("user") == null) {
-            response.sendRedirect("login");
+            response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
+        
+        User user = (User) session.getAttribute("user");
         
         // Authorization check for Admin role
         String selectedRole = (String) session.getAttribute("selectedRole");

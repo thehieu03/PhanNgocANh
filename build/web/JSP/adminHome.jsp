@@ -37,7 +37,7 @@
             <h1>Trang Quản trị</h1>
             <div class="user-info">
                 <span class="user-name">Xin chào, ${sessionScope.fullName}</span>
-                <a href="logout" class="logout-btn">Đăng xuất</a>
+                <a href="${pageContext.request.contextPath}/logout" class="logout-btn">Đăng xuất</a>
             </div>
         </div>
     </div>
@@ -50,19 +50,19 @@
         </div>
         
         <div class="menu-grid">
-            <a href="admin/users" class="menu-card">
+            <a href="${pageContext.request.contextPath}/users" class="menu-card">
                 <div class="menu-icon">👥</div>
                 <h3>Quản lý người dùng</h3>
                 <p>Thêm, sửa, xóa và phân quyền cho người dùng trong hệ thống.</p>
             </a>
             
-            <a href="admin/departments" class="menu-card">
+            <a href="${pageContext.request.contextPath}/departments" class="menu-card">
                 <div class="menu-icon">🏢</div>
                 <h3>Quản lý phòng ban</h3>
-                <p>Quản lý danh sách các phòng ban và nhân sự trực thuộc.</p>
+                <p>Xem danh sách phòng ban và thông tin nhân viên trong từng phòng ban.</p>
             </a>
             
-            <a href="admin/reports" class="menu-card">
+            <a href="${pageContext.request.contextPath}/reports" class="menu-card">
                 <div class="menu-icon">📊</div>
                 <h3>Báo cáo hệ thống</h3>
                 <p>Xem các báo cáo, thống kê toàn diện về hoạt động nghỉ phép.</p>

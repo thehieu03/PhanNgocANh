@@ -103,14 +103,12 @@ public class AgendaServlet extends HttpServlet {
             Map<Integer, String> userStatus = new HashMap<>();
             
             for (User user : users) {
-                userStatus.put(user.getUserId(), "Work"); // Default to work
+                userStatus.put(user.getUserId(), "Work");
             }
             
             agendaData.put(dateKey, userStatus);
             currentDate = currentDate.plusDays(1);
         }
-        
-        // Fill in leave requests
         for (Request req : requests) {
             LocalDate reqStart = req.getStartDate();
             LocalDate reqEnd = req.getEndDate();
@@ -135,5 +133,11 @@ public class AgendaServlet extends HttpServlet {
         }
         
         return agendaData;
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        doGet(request, response);
     }
 } 
