@@ -34,9 +34,18 @@ public class RequestDAO extends DbContext {
     private static final String SQL_DELETE = "DELETE FROM Requests WHERE request_id = ?";
     private static final String SQL_APPROVE = "UPDATE Requests SET status_id = 2, updated_at = ? WHERE request_id = ?"; // Assuming status_id 2 is "Approved"
     private static final String SQL_REJECT = "UPDATE Requests SET status_id = 3, updated_at = ? WHERE request_id = ?"; // Assuming status_id 3 is "Rejected"
+    private static final String SQL_FIND_PENDING_BY_MANAGER = 
+        "SELECT r.* FROM Requests r INNER JOIN Users u ON r.user_id = u.user_id WHERE u.manager_id = ? AND r.status_id = 1 ORDER BY r.created_at DESC";
     
     public RequestDAO() {
         super();
+    }
+    
+    /**
+     * Get database connection
+     */
+    public Connection getConnection() {
+        return connection;
     }
     
     /**
@@ -328,5 +337,45 @@ public class RequestDAO extends DbContext {
             db.close();
         }
         return list;
+    }
+
+    public List<Request> findPendingByManager(int managerId) {
+        List<Request> requests = new ArrayList<>();
+        try (PreparedStatement ps = connection.prepareStatement(SQL_FIND_PENDING_BY_MANAGER)) {
+            ps.setInt(1, managerId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    requests.add(mapResultSetToRequest(rs));
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Lỗi khi tìm requests chờ duyệt với manager ID: " + managerId, e);
+        }
+        return requests;
+    }
+
+    public List<Request> findPendingByManagerAndDepartment(int managerId, int departmentId) {
+        List<Request> requests = new ArrayList<>();
+        String sql = "SELECT r.*, u.full_name FROM Requests r " +
+                     "INNER JOIN Users u ON r.user_id = u.user_id " +
+                     "WHERE u.manager_id = ? AND u.department_id = ? AND r.status_id = 1 " +
+                     "ORDER BY r.created_at DESC";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, managerId);
+            ps.setInt(2, departmentId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Request req = mapResultSetToRequest(rs);
+                    // Map full_name vào User của Request
+                    Models.User reqUser = new Models.User();
+                    reqUser.setFullName(rs.getString("full_name"));
+                    req.setUser(reqUser);
+                    requests.add(req);
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Lỗi khi tìm requests chờ duyệt với manager ID: " + managerId + " và department ID: " + departmentId, e);
+        }
+        return requests;
     }
 }

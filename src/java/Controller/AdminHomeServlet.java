@@ -25,8 +25,6 @@ public class AdminHomeServlet extends HttpServlet {
         }
         
         User user = (User) session.getAttribute("user");
-        
-        // Authorization check for Admin role
         String selectedRole = (String) session.getAttribute("selectedRole");
         if (!"Admin".equalsIgnoreCase(selectedRole)) {
             // If not admin, redirect to an error page or login

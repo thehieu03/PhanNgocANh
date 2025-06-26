@@ -50,7 +50,7 @@
                             </div>
                         <% } %>
                         
-                        <form action="Request" method="POST" id="requestForm">
+                        <form method="post" action="${pageContext.request.contextPath}/requests?action=create">
                             <input type="hidden" name="action" value="create">
                             
                             <div class="row">
@@ -108,9 +108,7 @@
                             </div>
                             
                             <div class="d-flex justify-content-between">
-                                <a href="Request?action=list" class="btn btn-secondary">
-                                    <i class="fas fa-arrow-left me-2"></i>Quay lại
-                                </a>
+                                <a href="${pageContext.request.contextPath}/employee/home" class="btn btn-secondary">Quay lại</a>
                                 <button type="submit" class="btn btn-primary">
                                     <i class="fas fa-paper-plane me-2"></i>Gửi đơn
                                 </button>

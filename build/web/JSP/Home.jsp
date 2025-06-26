@@ -1,5 +1,3 @@
-
-
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -206,7 +204,7 @@
                                     <a class="nav-link" href="Request?action=create">
                                         <i class="fas fa-plus me-2"></i>Tạo đơn nghỉ phép
                                     </a>
-                                    <a class="nav-link" href="Request?action=list">
+                                    <a class="nav-link" href="${pageContext.request.contextPath}/requests?action=list">
                                         <i class="fas fa-list me-2"></i>Đơn của tôi
                                     </a>
                                 </c:if>

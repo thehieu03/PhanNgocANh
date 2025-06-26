@@ -249,22 +249,18 @@
                                     <span>
                                         <c:choose>
                                             <c:when test="${not empty req.startDate}">
-                                                <fmt:formatDate value="${req.startDate}" pattern="dd/MM/yyyy"/>
+                                                ${req.startDate.dayOfMonth}/${req.startDate.monthValue}/${req.startDate.year}
                                             </c:when>
-                                            <c:otherwise>
-                                                N/A
-                                            </c:otherwise>
+                                            <c:otherwise>N/A</c:otherwise>
                                         </c:choose>
                                     </span>
                                     <span> - </span>
                                     <span>
                                         <c:choose>
                                             <c:when test="${not empty req.endDate}">
-                                                <fmt:formatDate value="${req.endDate}" pattern="dd/MM/yyyy"/>
+                                                ${req.endDate.dayOfMonth}/${req.endDate.monthValue}/${req.endDate.year}
                                             </c:when>
-                                            <c:otherwise>
-                                                N/A
-                                            </c:otherwise>
+                                            <c:otherwise>N/A</c:otherwise>
                                         </c:choose>
                                     </span>
                                 </div>
@@ -278,7 +274,14 @@
                             <div class="mb-3">
                                 <strong>Ngày tạo:</strong>
                                 <div class="text-muted small mt-1">
-                                    <fmt:formatDate value="${req.createdAt}" pattern="dd/MM/yyyy HH:mm"/>
+                                    <c:choose>
+                                        <c:when test="${not empty req.createdAt}">
+                                            ${req.createdAt.dayOfMonth}/${req.createdAt.monthValue}/${req.createdAt.year}
+                                            &nbsp;
+                                            ${req.createdAt.hour < 10 ? '0' : ''}${req.createdAt.hour}:${req.createdAt.minute < 10 ? '0' : ''}${req.createdAt.minute}
+                                        </c:when>
+                                        <c:otherwise>N/A</c:otherwise>
+                                    </c:choose>
                                 </div>
                             </div>
                         </div>

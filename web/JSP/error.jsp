@@ -1,5 +1,5 @@
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@page contentType="text/html" pageEncoding="UTF-8" isErrorPage="true" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" isErrorPage="true" %>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -47,6 +47,17 @@
             color: white;
             transform: translateY(-2px);
         }
+        /* CSS cho khung debug */
+        .debug-box {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 15px;
+            margin-top: 20px;
+            font-size: 0.85em;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+        }
     </style>
 </head>
 <body>
@@ -55,31 +66,17 @@
             <i class="fas fa-exclamation-triangle fa-4x mb-3"></i>
             <h2 class="mb-2">
                 <c:choose>
-                    <c:when test="${not empty requestScope.error}">
-                        Có lỗi xảy ra
-                    </c:when>
-                    <c:when test="${pageContext.errorData.statusCode == 404}">
-                        Không tìm thấy trang
-                    </c:when>
-                    <c:when test="${pageContext.errorData.statusCode == 500}">
-                        Lỗi máy chủ
-                    </c:when>
-                    <c:otherwise>
-                        Lỗi không xác định
-                    </c:otherwise>
+                    <c:when test="${not empty requestScope.error}">Có lỗi xảy ra</c:when>
+                    <c:when test="${pageContext.errorData.statusCode == 404}">Không tìm thấy trang</c:when>
+                    <c:when test="${pageContext.errorData.statusCode == 500}">Lỗi máy chủ</c:when>
+                    <c:otherwise>Lỗi không xác định</c:otherwise>
                 </c:choose>
             </h2>
             <p class="mb-0">
                 <c:choose>
-                    <c:when test="${pageContext.errorData.statusCode == 404}">
-                        Trang bạn đang tìm kiếm không tồn tại
-                    </c:when>
-                    <c:when test="${pageContext.errorData.statusCode == 500}">
-                        Có lỗi xảy ra trên máy chủ
-                    </c:when>
-                    <c:otherwise>
-                        Vui lòng thử lại sau
-                    </c:otherwise>
+                    <c:when test="${pageContext.errorData.statusCode == 404}">Trang bạn đang tìm kiếm không tồn tại</c:when>
+                    <c:when test="${pageContext.errorData.statusCode == 500}">Có lỗi xảy ra trên máy chủ</c:when>
+                    <c:otherwise>Vui lòng thử lại sau</c:otherwise>
                 </c:choose>
             </p>
         </div>
@@ -99,6 +96,19 @@
                     <strong>URL:</strong> ${pageContext.errorData.requestURI}
                 </div>
             </c:if>
+            
+            <!-- Khung debug: in exception + stacktrace -->
+            <div class="debug-box text-start">
+                <strong>Exception:</strong>
+                <%= exception == null ? "Không có exception." : exception.toString() %>
+                <br/><strong>Stack trace:</strong><br/>
+                <% if (exception != null) {
+                     for (StackTraceElement el : exception.getStackTrace()) {
+                       out.println("&nbsp;&nbsp;at " + el + "<br/>");
+                     }
+                   }
+                %>
+            </div>
             
             <div class="mb-4">
                 <p class="text-muted">
@@ -120,24 +130,19 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // Auto redirect to home after 10 seconds
-        setTimeout(function() {
-            window.location.href = 'Home';
-        }, 10000);
-        
-        // Show countdown
+        setTimeout(() => window.location.href = 'Home', 10000);
+
         let countdown = 10;
         const countdownElement = document.createElement('div');
         countdownElement.className = 'text-center mt-3';
         countdownElement.innerHTML = `<small class="text-muted">Tự động chuyển về trang chủ sau <span id="countdown">${countdown}</span> giây</small>`;
         document.querySelector('.error-body').appendChild(countdownElement);
-        
-        const countdownInterval = setInterval(function() {
+
+        const countdownInterval = setInterval(() => {
             countdown--;
             document.getElementById('countdown').textContent = countdown;
-            if (countdown <= 0) {
-                clearInterval(countdownInterval);
-            }
+            if (countdown <= 0) clearInterval(countdownInterval);
         }, 1000);
     </script>
 </body>
-</html> 
+</html>

@@ -98,18 +98,14 @@ public class Login extends HttpServlet {
                 // Lấy danh sách role contexts
                 List<RoleContext> roleContexts = userDAO.getUserRoleContexts(user.getUserId());
                 session.setAttribute("roleContexts", roleContexts);
-
-                // Kiểm tra nếu có vai trò Admin thì redirect ngay
                 for (RoleContext context : roleContexts) {
                     if ("Admin".equalsIgnoreCase(context.getRoleName())) {
                         session.setAttribute("selectedRole", "Admin");
-                        session.setAttribute("selectedDept", 0); // Admin context is global
+                        session.setAttribute("selectedDept", 0); 
                         response.sendRedirect("admin/home");
-                        return; // Kết thúc xử lý
+                        return;
                     }
                 }
-                
-                // Kiểm tra số lượng contexts cho các vai trò khác (Employee, Manager)
                 if (roleContexts.size() == 1) {
                     // Chỉ có 1 context, tự động chọn
                     RoleContext context = roleContexts.get(0);

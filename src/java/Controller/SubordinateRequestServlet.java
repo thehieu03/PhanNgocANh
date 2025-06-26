@@ -10,26 +10,29 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * Servlet xử lý xem và duyệt đơn nghỉ phép của cấp dưới
+ */
 public class SubordinateRequestServlet extends HttpServlet {
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        // Đảm bảo session còn tồn tại và user đã đăng nhập
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("user") == null) {
+            response.sendRedirect(request.getContextPath() + "/login");
+            return;
+        }
+        // Xác định action (list, view, approve, reject)
         String action = request.getParameter("action");
         if (action == null) {
             action = "list";
         }
+
         switch (action) {
-            case "list":
-                listSubordinateRequests(request, response);
-                break;
             case "view":
                 viewRequest(request, response);
                 break;
@@ -39,6 +42,7 @@ public class SubordinateRequestServlet extends HttpServlet {
             case "reject":
                 rejectRequest(request, response);
                 break;
+            case "list":
             default:
                 listSubordinateRequests(request, response);
                 break;
@@ -48,140 +52,155 @@ public class SubordinateRequestServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        // POST xử lý approve/reject hoặc fallback về list
         String action = request.getParameter("action");
         if ("approve".equals(action)) {
             approveRequest(request, response);
         } else if ("reject".equals(action)) {
             rejectRequest(request, response);
         } else {
+            // POST không xác định => show list
             listSubordinateRequests(request, response);
         }
     }
 
+    /**
+     * Hiển thị danh sách đơn của các cấp dưới
+     */
     private void listSubordinateRequests(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            HttpSession session = request.getSession(false);
-            User user = (User) session.getAttribute("user");
-            if (session == null || user == null) {
-                response.sendRedirect(request.getContextPath() + "/login");
-                return;
-            }
-            int managerId = user.getUserId();
+            User manager = (User) request.getSession(false).getAttribute("user");
+            int managerId = manager.getUserId();
+
             RequestDAO requestDAO = new RequestDAO();
             List<Request> requests = requestDAO.findByManager(managerId);
+
+            // Lấy thông tin user cho từng đơn
             UserDAO userDAO = new UserDAO();
             for (Request req : requests) {
                 User reqUser = userDAO.findById(req.getUserId());
                 req.setUser(reqUser);
             }
+
             request.setAttribute("requests", requests);
             request.getRequestDispatcher("/JSP/subordinateRequests.jsp").forward(request, response);
         } catch (Exception e) {
-            System.out.println("Lỗi khi lấy danh sách đơn cấp dưới: " + e.getMessage());
-            request.setAttribute("error", "Có lỗi xảy ra khi tải danh sách đơn!");
+            // In chi tiết lỗi ra console để debug
+            e.printStackTrace();
+            request.setAttribute("error", "Có lỗi xảy ra khi tải danh sách đơn: " + e.getMessage());
             request.getRequestDispatcher("/JSP/error.jsp").forward(request, response);
         }
     }
 
+    /**
+     * Hiển thị chi tiết một đơn
+     */
     private void viewRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            String requestIdStr = request.getParameter("id");
-            if (requestIdStr == null || requestIdStr.trim().isEmpty()) {
+            String idStr = request.getParameter("id");
+            if (idStr == null || idStr.isBlank()) {
                 response.sendRedirect(request.getContextPath() + "/subordinate-requests");
                 return;
             }
-            int requestId = Integer.parseInt(requestIdStr);
+
+            int requestId = Integer.parseInt(idStr);
             RequestDAO requestDAO = new RequestDAO();
             Request req = requestDAO.findById(requestId);
+
             if (req == null) {
                 request.setAttribute("error", "Không tìm thấy đơn!");
                 request.getRequestDispatcher("/JSP/error.jsp").forward(request, response);
                 return;
             }
-            HttpSession session = request.getSession(false);
-            User user = (User) session.getAttribute("user");
-            int managerId = user.getUserId();
-            UserDAO userDAO = new UserDAO();
-            User requester = userDAO.findById(req.getUserId());
-            if (requester.getManagerId() == null || requester.getManagerId() != managerId) {
+
+            User manager = (User) request.getSession(false).getAttribute("user");
+            User requester = new UserDAO().findById(req.getUserId());
+            if (requester.getManagerId() == null || requester.getManagerId() != manager.getUserId()) {
                 request.setAttribute("error", "Bạn không có quyền xem đơn này!");
                 request.getRequestDispatcher("/JSP/error.jsp").forward(request, response);
                 return;
             }
+
             request.setAttribute("request", req);
             request.setAttribute("requester", requester);
             request.getRequestDispatcher("/JSP/requestDetail.jsp").forward(request, response);
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException nfe) {
             request.setAttribute("error", "ID đơn không hợp lệ!");
             request.getRequestDispatcher("/JSP/error.jsp").forward(request, response);
         } catch (Exception e) {
-            System.out.println("Lỗi khi xem chi tiết đơn: " + e.getMessage());
-            request.setAttribute("error", "Có lỗi xảy ra khi tải thông tin đơn!");
+            e.printStackTrace();
+            request.setAttribute("error", "Có lỗi xảy ra khi tải thông tin đơn: " + e.getMessage());
             request.getRequestDispatcher("/JSP/error.jsp").forward(request, response);
         }
     }
 
+    /**
+     * Duyệt đơn
+     */
     private void approveRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            String requestIdStr = request.getParameter("id");
-            String comment = request.getParameter("comment");
-            if (requestIdStr == null || requestIdStr.trim().isEmpty()) {
+            String idStr = request.getParameter("id");
+            if (idStr == null || idStr.isBlank()) {
                 response.sendRedirect(request.getContextPath() + "/subordinate-requests");
                 return;
             }
-            int requestId = Integer.parseInt(requestIdStr);
-            HttpSession session = request.getSession(false);
-            User user = (User) session.getAttribute("user");
-            int approverId = user.getUserId();
-            RequestDAO requestDAO = new RequestDAO();
-            boolean success = requestDAO.approve(requestId, approverId, comment);
+            int requestId = Integer.parseInt(idStr);
+            String comment = request.getParameter("comment");
+
+            User manager = (User) request.getSession(false).getAttribute("user");
+            boolean success = new RequestDAO().approve(requestId, manager.getUserId(), comment);
+
+            HttpSession session = request.getSession();
             if (success) {
                 session.setAttribute("message", "Đã duyệt đơn thành công!");
             } else {
                 session.setAttribute("error", "Không thể duyệt đơn!");
             }
             response.sendRedirect(request.getContextPath() + "/subordinate-requests");
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException nfe) {
             request.setAttribute("error", "ID đơn không hợp lệ!");
             request.getRequestDispatcher("/JSP/error.jsp").forward(request, response);
         } catch (Exception e) {
-            System.out.println("Lỗi khi duyệt đơn: " + e.getMessage());
-            request.setAttribute("error", "Có lỗi xảy ra khi duyệt đơn!");
+            e.printStackTrace();
+            request.setAttribute("error", "Có lỗi xảy ra khi duyệt đơn: " + e.getMessage());
             request.getRequestDispatcher("/JSP/error.jsp").forward(request, response);
         }
     }
 
+    /**
+     * Từ chối đơn
+     */
     private void rejectRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            String requestIdStr = request.getParameter("id");
-            String comment = request.getParameter("comment");
-            if (requestIdStr == null || requestIdStr.trim().isEmpty()) {
+            String idStr = request.getParameter("id");
+            if (idStr == null || idStr.isBlank()) {
                 response.sendRedirect(request.getContextPath() + "/subordinate-requests");
                 return;
             }
-            int requestId = Integer.parseInt(requestIdStr);
-            HttpSession session = request.getSession(false);
-            User user = (User) session.getAttribute("user");
-            int rejecterId = user.getUserId();
-            RequestDAO requestDAO = new RequestDAO();
-            boolean success = requestDAO.reject(requestId, rejecterId, comment);
+            int requestId = Integer.parseInt(idStr);
+            String comment = request.getParameter("comment");
+
+            User manager = (User) request.getSession(false).getAttribute("user");
+            boolean success = new RequestDAO().reject(requestId, manager.getUserId(), comment);
+
+            HttpSession session = request.getSession();
             if (success) {
                 session.setAttribute("message", "Đã từ chối đơn thành công!");
             } else {
                 session.setAttribute("error", "Không thể từ chối đơn!");
             }
             response.sendRedirect(request.getContextPath() + "/subordinate-requests");
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException nfe) {
             request.setAttribute("error", "ID đơn không hợp lệ!");
             request.getRequestDispatcher("/JSP/error.jsp").forward(request, response);
         } catch (Exception e) {
-            System.out.println("Lỗi khi từ chối đơn: " + e.getMessage());
-            request.setAttribute("error", "Có lỗi xảy ra khi từ chối đơn!");
+            e.printStackTrace();
+            request.setAttribute("error", "Có lỗi xảy ra khi từ chối đơn: " + e.getMessage());
             request.getRequestDispatcher("/JSP/error.jsp").forward(request, response);
         }
     }
-} 
+}
