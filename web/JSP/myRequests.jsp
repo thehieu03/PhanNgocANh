@@ -55,8 +55,8 @@
                         <tr>
                             <td>${loop.index + 1}</td>
                             <td>${req.title}</td>
-                            <td><fmt:formatDate value="${req.startDate}" pattern="dd/MM/yyyy"/></td>
-                            <td><fmt:formatDate value="${req.endDate}" pattern="dd/MM/yyyy"/></td>
+                            <td>${req.startDateString}</td>
+                            <td>${req.endDateString}</td>
                             <td>${req.reason}</td>
                             <td>
                                 <c:choose>
@@ -67,10 +67,10 @@
                                 </c:choose>
                             </td>
                             <td>
-                                <c:if test="${not empty req.createdAt}">
-                                    <fmt:formatDate value="${req.createdAt}" pattern="dd/MM/yyyy HH:mm"/>
+                                <c:if test="${not empty req.createdAtString}">
+                                    ${req.createdAtString}
                                 </c:if>
-                                <c:if test="${empty req.createdAt}">N/A</c:if>
+                                <c:if test="${empty req.createdAtString}">N/A</c:if>
                             </td>
                         </tr>
                     </c:forEach>

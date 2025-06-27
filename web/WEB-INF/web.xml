@@ -149,6 +149,11 @@
         <servlet-name>EmployeeRequest</servlet-name>
         <url-pattern>/employeeRequests</url-pattern>
     </servlet-mapping>
+    <!-- Thêm mapping cho /employee/requests/* -->
+    <servlet-mapping>
+        <servlet-name>RequestServlet</servlet-name>
+        <url-pattern>/employee/requests/*</url-pattern>
+    </servlet-mapping>
     <!-- Error Page -->
     <error-page>
         <error-code>404</error-code>

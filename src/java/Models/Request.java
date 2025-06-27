@@ -6,6 +6,7 @@ package Models;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  *
@@ -116,5 +117,17 @@ public class Request {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public String getStartDateString() {
+        return startDate != null ? startDate.format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy")) : "";
+    }
+
+    public String getEndDateString() {
+        return endDate != null ? endDate.format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy")) : "";
+    }
+
+    public String getCreatedAtString() {
+        return createdAt != null ? createdAt.format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")) : "";
     }
 }

@@ -99,15 +99,24 @@
             
             <!-- Khung debug: in exception + stacktrace -->
             <div class="debug-box text-start">
-                <strong>Exception:</strong>
-                <%= exception == null ? "Không có exception." : exception.toString() %>
-                <br/><strong>Stack trace:</strong><br/>
-                <% if (exception != null) {
-                     for (StackTraceElement el : exception.getStackTrace()) {
-                       out.println("&nbsp;&nbsp;at " + el + "<br/>");
-                     }
-                   }
-                %>
+                <c:choose>
+                    <c:when test="${not empty requestScope.exceptionMessage}">
+                        <strong>Exception:</strong> ${requestScope.exceptionMessage}<br/>
+                        <strong>Stack trace:</strong><br/>
+                        <pre style="white-space: pre-wrap;">${requestScope.stackTrace}</pre>
+                    </c:when>
+                    <c:otherwise>
+                        <strong>Exception:</strong>
+                        <%= exception == null ? "Không có exception." : exception.toString() %>
+                        <br/><strong>Stack trace:</strong><br/>
+                        <% if (exception != null) {
+                             for (StackTraceElement el : exception.getStackTrace()) {
+                               out.println("&nbsp;&nbsp;at " + el + "<br/>");
+                             }
+                           }
+                        %>
+                    </c:otherwise>
+                </c:choose>
             </div>
             
             <div class="mb-4">

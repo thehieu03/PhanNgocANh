@@ -242,7 +242,7 @@
                 <p>Tạo đơn xin nghỉ phép mới với các thông tin chi tiết về thời gian và lý do</p>
             </a>
             
-            <a href="requests/list?userId=${sessionScope.userId}" class="menu-card">
+            <a href="${pageContext.request.contextPath}/requests?action=list" class="menu-card">
                 <div class="menu-icon">📋</div>
                 <h3>Xem đơn của tôi</h3>
                 <p>Xem danh sách các đơn nghỉ phép đã tạo và trạng thái xử lý</p>

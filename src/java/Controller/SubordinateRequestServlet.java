@@ -26,7 +26,7 @@ public class SubordinateRequestServlet extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
-        // Xác định action (list, view, approve, reject)
+        // Xác định action (list, view, approve, reject, detail)
         String action = request.getParameter("action");
         if (action == null) {
             action = "list";
@@ -41,6 +41,9 @@ public class SubordinateRequestServlet extends HttpServlet {
                 break;
             case "reject":
                 rejectRequest(request, response);
+                break;
+            case "detail":
+                detailRequestJson(request, response);
                 break;
             case "list":
             default:
@@ -202,5 +205,65 @@ public class SubordinateRequestServlet extends HttpServlet {
             request.setAttribute("error", "Có lỗi xảy ra khi từ chối đơn: " + e.getMessage());
             request.getRequestDispatcher("/JSP/error.jsp").forward(request, response);
         }
+    }
+
+    /**
+     * Trả về JSON chi tiết đơn nghỉ phép cho frontend
+     */
+    private void detailRequestJson(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        response.setContentType("application/json;charset=UTF-8");
+        try {
+            String idStr = request.getParameter("id");
+            if (idStr == null || idStr.isBlank()) {
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                response.getWriter().write("{\"error\":\"Thiếu id đơn\"}");
+                return;
+            }
+            int requestId = Integer.parseInt(idStr);
+            RequestDAO requestDAO = new RequestDAO();
+            Request req = requestDAO.findById(requestId);
+            if (req == null) {
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                response.getWriter().write("{\"error\":\"Không tìm thấy đơn\"}");
+                return;
+            }
+            User manager = (User) request.getSession(false).getAttribute("user");
+            UserDAO userDAO = new UserDAO();
+            User requester = userDAO.findById(req.getUserId());
+            if (requester.getManagerId() == null || requester.getManagerId() != manager.getUserId()) {
+                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                response.getWriter().write("{\"error\":\"Không có quyền xem đơn này\"}");
+                return;
+            }
+            // Lấy tên trạng thái
+            DAO.RequestStatusDAO statusDAO = new DAO.RequestStatusDAO();
+            Models.RequestStatus status = statusDAO.findById(req.getStatusId());
+            String statusName = status != null ? status.getName() : "";
+            // Format ngày
+            String startDate = req.getStartDate() != null ? String.format("%d/%d/%d", req.getStartDate().getDayOfMonth(), req.getStartDate().getMonthValue(), req.getStartDate().getYear()) : "N/A";
+            String endDate = req.getEndDate() != null ? String.format("%d/%d/%d", req.getEndDate().getDayOfMonth(), req.getEndDate().getMonthValue(), req.getEndDate().getYear()) : "N/A";
+            String createdAt = req.getCreatedAt() != null ? String.format("%d/%d/%d %02d:%02d", req.getCreatedAt().getDayOfMonth(), req.getCreatedAt().getMonthValue(), req.getCreatedAt().getYear(), req.getCreatedAt().getHour(), req.getCreatedAt().getMinute()) : "N/A";
+            // Trả JSON
+            String json = String.format("{\"title\":\"%s\",\"userFullName\":\"%s\",\"startDate\":\"%s\",\"endDate\":\"%s\",\"reason\":\"%s\",\"createdAt\":\"%s\",\"statusName\":\"%s\"}",
+                escapeJson(req.getTitle()),
+                escapeJson(requester.getFullName()),
+                startDate,
+                endDate,
+                escapeJson(req.getReason()),
+                createdAt,
+                escapeJson(statusName)
+            );
+            response.getWriter().write(json);
+        } catch (Exception e) {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            response.getWriter().write("{\"error\":\"Lỗi server\"}");
+        }
+    }
+
+    // Hàm escape ký tự đặc biệt cho JSON
+    private String escapeJson(String s) {
+        if (s == null) return "";
+        return s.replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", " ").replace("\r", " ");
     }
 }

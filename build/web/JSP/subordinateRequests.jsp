@@ -171,36 +171,6 @@
             </div>
         </div>
 
-        <!-- Filter Section -->
-        <div class="filter-section">
-            <div class="row align-items-center">
-                <div class="col-md-4">
-                    <label for="statusFilter" class="form-label">Lọc theo trạng thái:</label>
-                    <select class="form-select" id="statusFilter">
-                        <option value="">Tất cả</option>
-                        <option value="1">Chờ duyệt</option>
-                        <option value="2">Đã duyệt</option>
-                        <option value="3">Đã từ chối</option>
-                    </select>
-                </div>
-                <div class="col-md-4">
-                    <label for="dateFilter" class="form-label">Lọc theo tháng:</label>
-                    <input type="month" class="form-control" id="dateFilter">
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label">&nbsp;</label>
-                    <div>
-                        <button class="btn btn-primary" onclick="applyFilters()">
-                            <i class="fas fa-filter me-1"></i>Áp dụng
-                        </button>
-                        <button class="btn btn-outline-secondary" onclick="clearFilters()">
-                            <i class="fas fa-times me-1"></i>Xóa bộ lọc
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <!-- Requests List -->
         <div class="row">
             <c:forEach var="req" items="${requests}">
@@ -246,23 +216,9 @@
                                 <strong>Thời gian:</strong>
                                 <div class="date-range mt-1">
                                     <i class="fas fa-calendar me-1"></i>
-                                    <span>
-                                        <c:choose>
-                                            <c:when test="${not empty req.startDate}">
-                                                ${req.startDate.dayOfMonth}/${req.startDate.monthValue}/${req.startDate.year}
-                                            </c:when>
-                                            <c:otherwise>N/A</c:otherwise>
-                                        </c:choose>
-                                    </span>
+                                    <span>${req.startDateString}</span>
                                     <span> - </span>
-                                    <span>
-                                        <c:choose>
-                                            <c:when test="${not empty req.endDate}">
-                                                ${req.endDate.dayOfMonth}/${req.endDate.monthValue}/${req.endDate.year}
-                                            </c:when>
-                                            <c:otherwise>N/A</c:otherwise>
-                                        </c:choose>
-                                    </span>
+                                    <span>${req.endDateString}</span>
                                 </div>
                             </div>
                             
@@ -275,10 +231,8 @@
                                 <strong>Ngày tạo:</strong>
                                 <div class="text-muted small mt-1">
                                     <c:choose>
-                                        <c:when test="${not empty req.createdAt}">
-                                            ${req.createdAt.dayOfMonth}/${req.createdAt.monthValue}/${req.createdAt.year}
-                                            &nbsp;
-                                            ${req.createdAt.hour < 10 ? '0' : ''}${req.createdAt.hour}:${req.createdAt.minute < 10 ? '0' : ''}${req.createdAt.minute}
+                                        <c:when test="${not empty req.createdAtString}">
+                                            ${req.createdAtString}
                                         </c:when>
                                         <c:otherwise>N/A</c:otherwise>
                                     </c:choose>
@@ -287,20 +241,24 @@
                         </div>
                         <div class="card-footer bg-transparent">
                             <div class="action-buttons">
-                                <a href="${pageContext.request.contextPath}/subordinate-requests?action=view&id=${req.requestId}" 
-                                   class="btn btn-outline-primary btn-sm">
+                                <a class="btn btn-outline-primary btn-sm" onclick="showRequestDetail('${req.requestId}');">
                                     <i class="fas fa-eye me-1"></i>Xem chi tiết
                                 </a>
-                                
                                 <c:if test="${req.statusId == 1}">
-                                    <button class="btn btn-success btn-sm" 
-                                            onclick="approveRequest(${req.requestId})">
-                                        <i class="fas fa-check me-1"></i>Duyệt
-                                    </button>
-                                    <button class="btn btn-danger btn-sm" 
-                                            onclick="rejectRequest(${req.requestId})">
-                                        <i class="fas fa-times me-1"></i>Từ chối
-                                    </button>
+                                    <form method="post" action="${pageContext.request.contextPath}/subordinate-requests" style="display:inline;">
+                                        <input type="hidden" name="action" value="approve"/>
+                                        <input type="hidden" name="id" value="${req.requestId}"/>
+                                        <button type="submit" class="btn btn-success btn-sm">
+                                            <i class="fas fa-check me-1"></i>Duyệt
+                                        </button>
+                                    </form>
+                                    <form method="post" action="${pageContext.request.contextPath}/subordinate-requests" style="display:inline;">
+                                        <input type="hidden" name="action" value="reject"/>
+                                        <input type="hidden" name="id" value="${req.requestId}"/>
+                                        <button type="submit" class="btn btn-danger btn-sm">
+                                            <i class="fas fa-times me-1"></i>Từ chối
+                                        </button>
+                                    </form>
                                 </c:if>
                             </div>
                         </div>
@@ -381,6 +339,28 @@
         </div>
     </div>
 
+    <!-- Request Detail Modal -->
+    <div class="modal fade" id="requestDetailModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-eye text-primary me-2"></i>Chi tiết đơn nghỉ phép
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="requestDetailContent">
+                        <div class="text-center text-muted">Đang tải...</div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // Auto-hide alerts after 5 seconds
@@ -394,20 +374,56 @@
 
         // Approve request
         function approveRequest(requestId) {
-            document.getElementById('approveRequestId').value = requestId;
             var modal = new bootstrap.Modal(document.getElementById('approveModal'));
+            document.getElementById('approveRequestId').value = requestId;
+            document.getElementById('approveComment').value = '';
             modal.show();
         }
 
-        // Reject request
+        // Xử lý submit duyệt đơn
+        const approveForm = document.getElementById('approveForm');
+        approveForm.onsubmit = function(e) {
+            e.preventDefault();
+            var requestId = document.getElementById('approveRequestId').value;
+            var comment = document.getElementById('approveComment').value;
+            var contextPath = '${pageContext.request.contextPath}';
+            fetch(contextPath + '/subordinate-requests', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `action=approve&id=${encodeURIComponent(requestId)}&comment=${encodeURIComponent(comment)}`
+            })
+            .then(res => res.ok ? res.text() : Promise.reject('Lỗi duyệt đơn'))
+            .then(() => { window.location.reload(); })
+            .catch(err => { alert(err); });
+        };
+
         function rejectRequest(requestId) {
-            document.getElementById('rejectRequestId').value = requestId;
             var modal = new bootstrap.Modal(document.getElementById('rejectModal'));
+            document.getElementById('rejectRequestId').value = requestId;
+            document.getElementById('rejectComment').value = '';
             modal.show();
         }
+
+        // Xử lý submit từ chối đơn
+        const rejectForm = document.getElementById('rejectForm');
+        rejectForm.onsubmit = function(e) {
+            e.preventDefault();
+            var requestId = document.getElementById('rejectRequestId').value;
+            var comment = document.getElementById('rejectComment').value;
+            var contextPath = '${pageContext.request.contextPath}';
+            fetch(contextPath + '/subordinate-requests', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `action=reject&id=${encodeURIComponent(requestId)}&comment=${encodeURIComponent(comment)}`
+            })
+            .then(res => res.ok ? res.text() : Promise.reject('Lỗi từ chối đơn'))
+            .then(() => { window.location.reload(); })
+            .catch(err => { alert(err); });
+        };
 
         // Apply filters
         function applyFilters() {
+            debugger;
             var statusFilter = document.getElementById('statusFilter').value;
             var dateFilter = document.getElementById('dateFilter').value;
             var month = dateFilter ? new Date(dateFilter).getMonth() + 1 : null;
@@ -430,6 +446,7 @@
 
         // Clear filters
         function clearFilters() {
+            debugger;
             document.getElementById('statusFilter').value = '';
             document.getElementById('dateFilter').value = '';
             
@@ -437,6 +454,36 @@
             items.forEach(function(item) {
                 item.style.display = 'block';
             });
+        }
+
+        function showRequestDetail(requestId) {
+            debugger;
+            var modal = new bootstrap.Modal(document.getElementById('requestDetailModal'));
+            var content = document.getElementById('requestDetailContent');
+            content.innerHTML = '<div class="text-center text-muted">Đang tải...</div>';
+            modal.show();
+            // Lấy context path từ JSP
+            var contextPath = '${pageContext.request.contextPath}';
+            fetch(contextPath + '/subordinate-requests?action=detail&id=' + requestId)
+                .then(response => {
+                    if (!response.ok) throw new Error('Lỗi khi lấy dữ liệu');
+                    return response.json();
+                })
+                .then(data => {
+                    debugger;
+                    content.innerHTML = `
+                        <div class="mb-2"><strong>Tiêu đề:</strong> ${data.title}</div>
+                        <div class="mb-2"><strong>Người yêu cầu:</strong> ${data.userFullName}</div>
+                        <div class="mb-2"><strong>Thời gian:</strong> <span class="text-muted">${data.startDate} - ${data.endDate}</span></div>
+                        <div class="mb-2"><strong>Lý do:</strong> <span class="text-muted">${data.reason}</span></div>
+                        <div class="mb-2"><strong>Ngày tạo:</strong> ${data.createdAt}</div>
+                        <div class="mb-2"><strong>Trạng thái:</strong> ${data.statusName}</div>
+                    `;
+                })
+                .catch(err => {
+                    console.log(err);
+                    content.innerHTML = '<div class="text-danger">Không thể tải chi tiết đơn nghỉ phép.</div>';
+                });
         }
     </script>
 </body>

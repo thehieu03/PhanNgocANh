@@ -110,8 +110,12 @@ public class RequestServlet extends HttpServlet {
             request.setAttribute("statuses", statuses);
             request.getRequestDispatcher("/JSP/myRequests.jsp").forward(request, response);
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "LỘi khi lấy danh sách đơn", e);
-            request.setAttribute("error", "Có lỗi xảy ra khi tải danh sách đơn");
+            LOGGER.log(Level.SEVERE, "Lỗi khi lấy danh sách đơn", e);
+            request.setAttribute("error", "Có lỗi xảy ra khi tải danh sách đơn: " + e.getMessage());
+            request.setAttribute("exceptionMessage", e.toString());
+            java.io.StringWriter sw = new java.io.StringWriter();
+            e.printStackTrace(new java.io.PrintWriter(sw));
+            request.setAttribute("stackTrace", sw.toString());
             request.getRequestDispatcher("/JSP/error.jsp")
                    .forward(request, response);
         }
